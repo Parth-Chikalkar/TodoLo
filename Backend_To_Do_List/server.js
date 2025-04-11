@@ -31,7 +31,7 @@ app.post('/api/create',async (req,res)=>{
         password:hash,
 
     })
-    const token = jwt.sign({username},'SecretOfTodolo');
+    const token = jwt.sign({username},jwtSecret);
     
     return res.status(200).json({message : `${username} created Succesfully !`,token});
 })
@@ -44,7 +44,7 @@ app.post("/api/checkUser",async (req,res)=>{
     const hash = await bcrypt.hash(password,salt);
         const bool = bcrypt.compareSync(password, hash);
         if(bool){
-            const token = jwt.sign({username},'SecretOfTodolo');
+            const token = jwt.sign({username},jwtSecret);
             return res.status(200).json({message :`Welcome ${username}`,token});
         }
         return res.json({message : "Invalid Credentials"})
@@ -53,7 +53,7 @@ app.post("/api/checkUser",async (req,res)=>{
 })
 app.post('/api/Data',async (req,res)=>{
 const {token} = req.body;
-const username =  jwt.verify(token,'SecretOfTodolo');
+const username =  jwt.verify(token,jwtSecret);
 const us = username.username;
 const data = await userModel.findOne({username : us});
 res.json({data});
@@ -62,7 +62,7 @@ res.json({data});
 })
 app.post('/api/edit',async (req,res)=>{
     const {title,des,date,token}= req.body;
-    const us = jwt.verify(token,'SecretOfTodolo').username;
+    const us = jwt.verify(token,jwtSecret).username;
     const newTask = {
         taskTitle : title,
         taskDescription: des,
@@ -73,7 +73,7 @@ app.post('/api/edit',async (req,res)=>{
 })
 app.post('/api/deleteTask',async (req,res)=>{
 const {id,token} = req.body;
-const username = jwt.verify(token,'SecretOfTodolo').username;
+const username = jwt.verify(token,jwtSecret).username;
 const userm = await userModel.findOneAndUpdate({username},{$pull :{Tasks : {_id : id}}},{new: true});
 return res.json({message : "Task Deleted !"});  
 
@@ -81,7 +81,7 @@ return res.json({message : "Task Deleted !"});
 })
 app.post('/api/completed',async (req,res)=>{
     const{id,token} = req.body;
-    const username = jwt.verify(token,'SecretOfTodolo').username;
+    const username = jwt.verify(token,jwtSecret).username;
     const use = await userModel.findOneAndUpdate({username,"Tasks._id" : id},{$set : {
         "Tasks.$.isCompleted": true,
     }},{new : true});
@@ -97,7 +97,7 @@ app.post('/api/editTask',async (req,res)=>{
       } = req.body;
     
       
-      const us = jwt.verify(token,'SecretOfTodolo').username;
+      const us = jwt.verify(token,jwtSecret).username;
       const a = await userModel.findOneAndUpdate({username : us,"Tasks._id":id},{$set : {
         "Tasks.$.taskTitle": newTitle,
         "Tasks.$.taskDescription" : newDesc,
@@ -106,4 +106,4 @@ app.post('/api/editTask',async (req,res)=>{
       }},{new:true});
       return res.json({message :"Task Edited Succesfully !"});
 })
-app.listen(3000);
+app.listen(port);
