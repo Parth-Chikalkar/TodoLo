@@ -4,11 +4,12 @@ import { Link, useNavigate } from 'react-router-dom'
 
 function Login() {
      const [username , setusername] = useState();   
+     const baseURL = import.meta.env.VITE_BACKEND_URL;
   const [password , setpassword] = useState();
          const nav = useNavigate();
  const HandleSubmit = async (e)=>{
 e.preventDefault();
-const res = await axios.post('http://localhost:3000/api/checkUser',{username,password});
+const res = await axios.post(`${baseURL}/api/checkUser`,{username,password});
 
 if(res.status==200){
     sessionStorage.setItem('Token',res.data.token);

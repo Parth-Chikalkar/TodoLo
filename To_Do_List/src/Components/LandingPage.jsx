@@ -14,13 +14,14 @@ function LandingPage() {
     'bg-teal-500',
     'bg-orange-500',
   ];
+  const baseURL = import.meta.env.VITE_BACKEND_URL;
   const randomIndex = Math.floor(Math.random() * colors.length)
   const color = colors[randomIndex];
   const [loading,setLoading]= useState(true);
   const [data,setData] = useState();
   const getData = async ()=>{
     const token = sessionStorage.getItem('Token');
-    const response = await axios.post('http://localhost:3000/api/Data',{token});
+    const response = await axios.post(`${baseURL}/api/Data`,{token});
      setData(response.data.data);
      setLoading(false);
     
@@ -36,7 +37,7 @@ function LandingPage() {
       
       <Nav username={data.username}/>
       {data.Tasks.length>0 ? 
-     ( <div className='flex h-full md:h-auto pb-16 overflow-y-scroll  justify-center w-full ml:px-5 gap-8 flex-wrap mt-2'>{data.Tasks.map((elem,idx)=>{
+     ( <div className='flex md:h-auto pb-16 overflow-y-scroll  justify-center w-full ml:px-5 gap-8 flex-wrap mt-2'>{data.Tasks.map((elem,idx)=>{
         return <Card key={idx}   color={color} elem={elem}/>
       })}</div>)
     

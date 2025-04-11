@@ -8,9 +8,10 @@ function Signup() {
      const [email , setemail] = useState();
      const [password , setpassword] = useState();
 const nav = useNavigate();
+const baseURL = import.meta.env.VITE_BACKEND_URL;
  const HandleSubmit = async (e)=>{
 e.preventDefault();
-const res = await axios.post('http://localhost:3000/api/create',{username,password,email});
+const res = await axios.post(`${baseURL}/api/create`,{username,password,email});
 alert(res.data.message);
 if(res.status==200){
     sessionStorage.setItem('Token',res.data.token);

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 
 function Add() {
-    
+  const baseURL = import.meta.env.VITE_BACKEND_URL;
     const [title,settitle]=useState();
     const [des,setdes]=useState();
     const [date,setdate]=useState();
@@ -12,7 +12,7 @@ function Add() {
     const handleSub = async (e)=>{
         e.preventDefault();
         const token = sessionStorage.getItem('Token');
-        const res = await axios.post('http://localhost:3000/api/edit',{title,des,date,token});
+        const res = await axios.post(`${baseURL}/api/edit`,{title,des,date,token});
         alert(res.data.message);
         nav('/');
     }

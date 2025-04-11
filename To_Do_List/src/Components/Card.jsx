@@ -4,12 +4,12 @@ import { CiEdit } from "react-icons/ci";
 import axios from 'axios';
 
 function Card({color , elem}) {
-
+  const baseURL = import.meta.env.VITE_BACKEND_URL;
     const created = elem.createdAt.split('T')[0];
     const due = elem.DueDate.split('T')[0];
     const handleDelete = async (id)=>{
     const token = sessionStorage.getItem('Token')
-    const res = await axios.post('http://localhost:3000/api/deleteTask',{id,token});
+    const res = await axios.post(`${baseURL}/api/deleteTask`,{id,token});
     alert(res.data.message);
     window.location.reload();
     }
@@ -29,7 +29,7 @@ function Card({color , elem}) {
       const newDueDate = prompt("Enter new Due Date (YYYY-MM-DD):", elem.DueDate.split('T')[0]);
       if (!newDueDate) return;
     
-      const res = await axios.post('http://localhost:3000/api/editTask', {
+      const res = await axios.post(`${baseURL}/api/editTask`, {
         id,
         token,
         newTitle,
@@ -45,14 +45,14 @@ function Card({color , elem}) {
         return;
       }
       const token = sessionStorage.getItem('Token')
-      const res = await axios.post('http://localhost:3000/api/completed',{id,token})
+      const res = await axios.post(`${baseURL}/api/completed`,{id,token})
       alert(res.data.message);
       window.location.reload();
    
     }
     
   return (
-    <div className={`${color} min-h-40 rounded-lg p-4 w-72 `}>
+    <div className={`${color} h-full rounded-lg p-4 w-72 `}>
        <div className='w-full flex items-center justify-between'>
        <h1 className={`text-xl ${elem.isCompleted ? "line-through" : "no-underline"} leading-tight font-semibold`}>{elem.taskTitle} </h1>
        <h1 className='text-sm font-semibold py-1 px-2 whitespace-nowrap bg-red-500 shadow rounded-lg '>{due}</h1>
