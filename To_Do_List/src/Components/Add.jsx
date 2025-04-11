@@ -10,10 +10,14 @@ function Add() {
     const [des,setdes]=useState();
     const [date,setdate]=useState();
     const nav = useNavigate();
+    const [loading,setLoading] = useState(false);
     const handleSub = async (e)=>{
         e.preventDefault();
+
         const token = sessionStorage.getItem('Token');
+        setLoading(true);
         const res = await axios.post(`${baseURL}/api/edit`,{title,des,date,token});
+        setLoading(false);
         alert(res.data.message);
         nav('/');
     }
@@ -30,7 +34,7 @@ function Add() {
             <textarea onChange={(e)=>setdes(e.target.value)} className='bg-white/40 resize-none rounded-md p-2 w-full h-20' ></textarea>
             <h4 className='font-thin text-sm'>Task Due </h4>
             <input className='bg-white/40 rounded-md p-2 w-full h-10' onChange={(e)=>setdate(e.target.value)} type="date" />
-            <button type='submit' className='text-shadow-lg hover:cursor-pointer mt-1' >Create Task</button>
+            <button type='submit' className={`${loading ? "opacity-75" : "opacity-100"} text-shadow-lg hover:cursor-pointer mt-1`} >{loading ? "Creating..." : "Create Task"}</button>
             <Link to='/' className="text-sm w-full underline justify-between px-auto flex items-center text-blue-400 " >Home</Link>
             </form>
          </div>
