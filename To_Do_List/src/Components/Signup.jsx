@@ -4,6 +4,7 @@ import { data, useNavigate } from 'react-router-dom'
 
 function Signup() {
      // Input Handling ! 
+     const [loading,setLoading] = useState(false);
      const [username , setusername] = useState();
      const [email , setemail] = useState();
      const [password , setpassword] = useState();
@@ -11,12 +12,13 @@ const nav = useNavigate();
 const baseURL = import.meta.env.VITE_BACKEND_URL;
  const HandleSubmit = async (e)=>{
 e.preventDefault();
+setLoading(true);
 const res = await axios.post(`${baseURL}/api/create`,{username,password,email});
 alert(res.data.message);
 if(res.status==200){
     sessionStorage.setItem('Token',res.data.token);
 }
-nav('/');
+
  }
  
    
@@ -31,7 +33,7 @@ nav('/');
             <input onChange={(e)=>setemail(e.target.value)} className='w-full bg-white/40 rounded-md p-2 h-10'  type="email" required/>
             <h3 className='font-thin text-sm'>Password</h3>
             <input className='w-full bg-white/40 p-2 rounded-md h-10' onChange={(e)=>setpassword(e.target.value)} type="password" required />
-            <button type='submit' className='hover:cursor-pointer mt-2 '>Sign Up</button>
+            <button type='submit' className={`${loading? "opacity-75 " :"opacity-100"} hover:cursor-pointer mt-2 `}>{loading ? "Signing Up" : "Sign Up"}</button>
         </form>
        
     </div>
